@@ -8,7 +8,7 @@
   </p>
 
   <p>
-    <img alt="45 codebases mapped" src="https://img.shields.io/badge/codebases-45-b8ff65?style=flat-square&labelColor=101310" />
+    <img alt="66 codebases mapped" src="https://img.shields.io/badge/codebases-66-b8ff65?style=flat-square&labelColor=101310" />
     <img alt="Next.js 16" src="https://img.shields.io/badge/Next.js-16.3-eff3eb?style=flat-square&logo=nextdotjs&logoColor=eff3eb&labelColor=101310" />
     <img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-5-75d6ff?style=flat-square&logo=typescript&logoColor=75d6ff&labelColor=101310" />
     <img alt="Source cited" src="https://img.shields.io/badge/source-cited-b8ff65?style=flat-square&logo=github&logoColor=b8ff65&labelColor=101310" />
@@ -29,7 +29,7 @@ request moves through the system. CodeTerrain turns that journey into a map:
 buildings represent subsystems, routes represent control and data flow, and
 every explanation links back to the exact source file at the analyzed commit.
 
-The library currently includes **45 maps across six domains**, from React,
+The library currently includes **66 maps across six domains**, from React,
 Next.js, and VS Code to Linux, Kubernetes, PostgreSQL, Redis, llama.cpp, and
 Unsloth.
 

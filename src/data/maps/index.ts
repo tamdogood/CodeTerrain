@@ -6,6 +6,9 @@ import { batchB } from "./batch-b";
 import { batchC } from "./batch-c";
 import { batchD } from "./batch-d";
 import { batchE } from "./batch-e";
+import { batchF } from "./batch-f";
+import { batchG } from "./batch-g";
+import { batchH } from "./batch-h";
 import { herdrMap } from "./herdr";
 
 export const systemMaps = [
@@ -15,6 +18,9 @@ export const systemMaps = [
   ...batchC,
   ...batchD,
   ...batchE,
+  ...batchF,
+  ...batchG,
+  ...batchH,
 ];
 
 assertSystemMaps(systemMaps);
