@@ -1,69 +1,194 @@
-import Image from "next/image";
+import Link from "next/link";
+import { ArrowDown, ArrowRight, ExternalLink, GitFork } from "lucide-react";
+
+import { RepositoryLibrary } from "@/components/repository-library";
+import { buttonVariants } from "@/components/ui/button";
+import { repositories } from "@/lib/repositories";
+import { cn } from "@/lib/utils";
+
+function Brand() {
+  return (
+    <Link href="/" className="brand focus-ring" aria-label="CodeTerrain home">
+      <span className="brand-mark" aria-hidden="true">
+        <span />
+      </span>
+      <span>CodeTerrain</span>
+    </Link>
+  );
+}
+
+function HeroMap() {
+  return (
+    <div className="hero-map" aria-label="Preview of an isometric code map">
+      <div className="hero-map-bar">
+        <span className="window-dots" aria-hidden="true">
+          <i />
+          <i />
+          <i />
+        </span>
+        <span>herdr / runtime-map</span>
+        <span className="hero-live"><i /> live</span>
+      </div>
+      <div className="hero-map-canvas" aria-hidden="true">
+        <span className="hero-district district-one">CLIENTS</span>
+        <span className="hero-district district-two">RUNTIME</span>
+        <span className="hero-district district-three">STORAGE</span>
+        <span className="hero-line hero-line-one" />
+        <span className="hero-line hero-line-two" />
+        <span className="hero-line hero-line-three" />
+        <span className="hero-pulse pulse-one" />
+        <span className="hero-pulse pulse-two" />
+        <span className="hero-building building-one"><i /></span>
+        <span className="hero-building building-two"><i /></span>
+        <span className="hero-building building-three"><i /></span>
+        <span className="hero-building building-four"><i /></span>
+        <span className="hero-building building-five"><i /></span>
+      </div>
+      <div className="hero-map-caption">
+        <div>
+          <span>Selected path</span>
+          <strong>Interactive attach</strong>
+        </div>
+        <div>
+          <span>Payload</span>
+          <strong>Request → PTY bytes</strong>
+        </div>
+        <ArrowRight aria-hidden="true" />
+      </div>
+    </div>
+  );
+}
 
 export default function Home() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
+    <main>
+      <header className="site-header">
+        <div className="shell header-inner">
+          <Brand />
+          <nav aria-label="Main navigation">
+            <a href="#how-it-works" className="nav-link focus-ring">
+              How it works
+            </a>
+            <a href="#library" className="nav-link focus-ring">
+              Library
+            </a>
             <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
+              href="https://github.com/herdrdev/herdr"
+              target="_blank"
+              rel="noreferrer"
+              className={cn(buttonVariants({ variant: "outline", size: "sm" }), "header-github")}
             >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+              <GitFork aria-hidden="true" />
+              Live repo
+            </a>
+          </nav>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
+      </header>
+
+      <section className="hero-section">
+        <div className="hero-glow" aria-hidden="true" />
+        <div className="shell hero-grid">
+          <div className="hero-copy">
+            <p className="hero-kicker">
+              <span /> Open-source architecture, made legible
+            </p>
+            <h1>
+              Don’t just read code.
+              <br />
+              <em>See how it moves.</em>
+            </h1>
+            <p className="hero-lede">
+              Interactive, source-cited system maps that turn famous
+              repositories into explorable worlds—built for curious developers,
+              not architecture astronauts.
+            </p>
+            <div className="hero-actions">
+              <Link
+                href="/repo/herdr"
+                className={cn(buttonVariants({ size: "lg" }), "primary-cta")}
+              >
+                Explore a live map <ArrowRight aria-hidden="true" />
+              </Link>
+              <a
+                href="#library"
+                className={cn(buttonVariants({ variant: "ghost", size: "lg" }), "secondary-cta")}
+              >
+                Browse the roadmap <ArrowDown aria-hidden="true" />
+              </a>
+            </div>
+            <dl className="hero-stats">
+              <div>
+                <dt>{String(repositories.length).padStart(2, "0")}</dt>
+                <dd>codebases tracked</dd>
+              </div>
+              <div>
+                <dt>{String(repositories.filter(({ status }) => status === "live").length).padStart(2, "0")}</dt>
+                <dd>interactive maps live</dd>
+              </div>
+              <div>
+                <dt>100%</dt>
+                <dd>live paths cited</dd>
+              </div>
+            </dl>
+          </div>
+          <div className="hero-visual">
+            <div className="coordinate coordinate-top">37.7749° N</div>
+            <HeroMap />
+            <div className="coordinate coordinate-bottom">SYSTEM / 001</div>
+          </div>
+        </div>
+      </section>
+
+      <section className="workflow-section" id="how-it-works">
+        <div className="shell workflow-grid">
+          <div className="workflow-intro">
+            <p className="eyebrow">Learn by following the flow</p>
+            <h2>From “what is this?” to “I know where to look.”</h2>
+          </div>
+          <ol className="workflow-steps">
+            <li>
+              <span>01</span>
+              <div>
+                <h3>Choose a journey</h3>
+                <p>Start with a real user action instead of a folder tree.</p>
+              </div>
+            </li>
+            <li>
+              <span>02</span>
+              <div>
+                <h3>Trace the payload</h3>
+                <p>Watch data cross real boundaries, with jargon explained in context.</p>
+              </div>
+            </li>
+            <li>
+              <span>03</span>
+              <div>
+                <h3>Open the evidence</h3>
+                <p>Every claim links to the exact file at a pinned commit.</p>
+              </div>
+            </li>
+          </ol>
+        </div>
+      </section>
+
+      <div className="shell">
+        <RepositoryLibrary />
+      </div>
+
+      <footer className="site-footer">
+        <div className="shell footer-inner">
+          <Brand />
+          <p>Built to make intimidating codebases feel navigable.</p>
           <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
+            href="https://github.com/herdrdev/herdr"
             target="_blank"
-            rel="noopener noreferrer"
+            rel="noreferrer"
+            className="footer-link focus-ring"
           >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
+            View the live repo <ExternalLink aria-hidden="true" />
           </a>
         </div>
-      </main>
-    </div>
+      </footer>
+    </main>
   );
 }
