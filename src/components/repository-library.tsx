@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowRight, ExternalLink, Search, Sparkles } from "lucide-react";
+import { ArrowRight, ExternalLink, Search, Sparkles, Star } from "lucide-react";
 import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 
 import { Badge } from "@/components/ui/badge";
@@ -10,11 +10,18 @@ import { Input } from "@/components/ui/input";
 import {
   categories,
   repositories,
+  sortRepositories,
   type RepoCategory,
   type Repository,
+  type RepositorySort,
 } from "@/lib/repositories";
 
 type CategoryFilter = RepoCategory | "All";
+
+const starFormatter = new Intl.NumberFormat("en", {
+  notation: "compact",
+  maximumFractionDigits: 1,
+});
 
 function MiniCity({ accent }: { accent: string }) {
   return (
@@ -53,8 +60,12 @@ function RepositoryCard({ repository }: { repository: Repository }) {
             <span className="status-dot" />
             {isLive ? "Live map" : "Planned"}
           </Badge>
-          <span className="repo-number">
-            {String(repositories.indexOf(repository) + 1).padStart(2, "0")}
+          <span
+            className="repo-stars"
+            aria-label={`${repository.stars.toLocaleString("en")} GitHub stars`}
+            title={`${repository.stars.toLocaleString("en")} GitHub stars`}
+          >
+            <Star aria-hidden="true" /> {starFormatter.format(repository.stars)}
           </span>
         </div>
         <MiniCity accent={repository.accent} />
@@ -81,7 +92,7 @@ function RepositoryCard({ repository }: { repository: Repository }) {
           ))}
         </div>
         <div className="repo-card-footer">
-          <span>{repository.language}</span>
+          <span>{repository.language} · {repository.difficulty}</span>
           <a
             href={repository.github}
             target="_blank"
@@ -100,6 +111,7 @@ function RepositoryCard({ repository }: { repository: Repository }) {
 export function RepositoryLibrary() {
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState<CategoryFilter>("All");
+  const [sort, setSort] = useState<RepositorySort>("popular");
   const searchInput = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -117,22 +129,25 @@ export function RepositoryLibrary() {
   const filteredRepositories = useMemo(() => {
     const normalizedQuery = query.trim().toLowerCase();
 
-    return repositories.filter((repository) => {
-      const matchesCategory =
-        category === "All" || repository.category === category;
-      const searchable = [
-        repository.name,
-        repository.owner,
-        repository.description,
-        repository.language,
-        ...repository.concepts,
-      ]
-        .join(" ")
-        .toLowerCase();
+    return sortRepositories(
+      repositories.filter((repository) => {
+        const matchesCategory =
+          category === "All" || repository.category === category;
+        const searchable = [
+          repository.name,
+          repository.owner,
+          repository.description,
+          repository.language,
+          ...repository.concepts,
+        ]
+          .join(" ")
+          .toLowerCase();
 
-      return matchesCategory && searchable.includes(normalizedQuery);
-    });
-  }, [category, query]);
+        return matchesCategory && searchable.includes(normalizedQuery);
+      }),
+      sort,
+    );
+  }, [category, query, sort]);
 
   return (
     <section className="library-section" id="library" aria-labelledby="library-title">
@@ -181,6 +196,17 @@ export function RepositoryLibrary() {
         <span>{filteredRepositories.length} codebases</span>
         <span className="results-rule" />
         <span>Each citation links to the mapped commit</span>
+        <label className="sort-control">
+          <span>Sort</span>
+          <select
+            value={sort}
+            onChange={(event) => setSort(event.target.value as RepositorySort)}
+          >
+            <option value="popular">Most popular</option>
+            <option value="approachable">Beginner-friendly</option>
+            <option value="name">Name A–Z</option>
+          </select>
+        </label>
       </div>
 
       {filteredRepositories.length > 0 ? (
