@@ -1,6 +1,6 @@
 # CodeTerrain
 
-An interactive learning library with 45 source-cited, isometric maps of
+An interactive learning library with 66 source-cited, isometric maps of
 landmark software repositories.
 
 ## Run locally
