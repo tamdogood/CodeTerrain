@@ -4,9 +4,18 @@ import { repositories } from "@/lib/repositories";
 import { batchA } from "./batch-a";
 import { batchB } from "./batch-b";
 import { batchC } from "./batch-c";
+import { batchD } from "./batch-d";
+import { batchE } from "./batch-e";
 import { herdrMap } from "./herdr";
 
-export const systemMaps = [herdrMap, ...batchA, ...batchB, ...batchC];
+export const systemMaps = [
+  herdrMap,
+  ...batchA,
+  ...batchB,
+  ...batchC,
+  ...batchD,
+  ...batchE,
+];
 
 assertSystemMaps(systemMaps);
 

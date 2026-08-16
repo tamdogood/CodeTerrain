@@ -142,7 +142,7 @@ export function RepositoryLibrary() {
           <h2 id="library-title">Choose a codebase to explore</h2>
         </div>
         <p>
-          Twenty-five source-cited atlases, from runtimes and databases to AI
+          Forty-five source-cited atlases, from runtimes and databases to AI
           systems and developer tools.
         </p>
       </div>
