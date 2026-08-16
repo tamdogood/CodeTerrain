@@ -142,7 +142,7 @@ export function RepositoryLibrary() {
           <h2 id="library-title">Pick a codebase</h2>
         </div>
         <p>
-          Open a map to trace the main paths and jump to the source.
+          Explore {repositories.length} source-linked maps and jump straight to the code.
         </p>
       </div>
 
