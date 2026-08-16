@@ -73,13 +73,13 @@ export default function Home() {
               Library
             </a>
             <a
-              href="https://github.com/herdrdev/herdr"
+              href="https://github.com/tamdogood/CodeTerrain"
               target="_blank"
               rel="noreferrer"
               className={cn(buttonVariants({ variant: "outline", size: "sm" }), "header-github")}
             >
               <GitFork aria-hidden="true" />
-              Live repo
+              GitHub
             </a>
           </nav>
         </div>
@@ -180,12 +180,12 @@ export default function Home() {
           <Brand />
           <p>Built to make intimidating codebases feel navigable.</p>
           <a
-            href="https://github.com/herdrdev/herdr"
+            href="https://github.com/tamdogood/CodeTerrain"
             target="_blank"
             rel="noreferrer"
             className="footer-link focus-ring"
           >
-            View the live repo <ExternalLink aria-hidden="true" />
+            GitHub <ExternalLink aria-hidden="true" />
           </a>
         </div>
       </footer>
