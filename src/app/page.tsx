@@ -86,7 +86,7 @@ export default function Home() {
               Library
             </a>
             <a
-              href="https://github.com/herdrdev/herdr"
+              href="https://github.com/tamdogood/CodeTerrain"
               target="_blank"
               rel="noreferrer"
               className={cn(buttonVariants({ variant: "outline", size: "sm" }), "header-github")}
@@ -154,7 +154,7 @@ export default function Home() {
           <Brand />
           <p>{repositories.length} open-source codebases, mapped from source.</p>
           <a
-            href="https://github.com/herdrdev/herdr"
+            href="https://github.com/tamdogood/CodeTerrain"
             target="_blank"
             rel="noreferrer"
             className="footer-link focus-ring"
