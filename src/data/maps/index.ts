@@ -6,14 +6,22 @@ import { batchB } from "./batch-b";
 import { batchC } from "./batch-c";
 import { batchD } from "./batch-d";
 import { batchE } from "./batch-e";
+import { herdrMap } from "./herdr";
 
-export const systemMaps = [...batchA, ...batchB, ...batchC, ...batchD, ...batchE];
+export const systemMaps = [
+  herdrMap,
+  ...batchA,
+  ...batchB,
+  ...batchC,
+  ...batchD,
+  ...batchE,
+];
 
 assertSystemMaps(systemMaps);
 
 const mapsBySlug = new Map(systemMaps.map((map) => [map.slug, map]));
 const missingMaps = repositories.filter(
-  ({ status, mapPath, slug }) => status === "live" && !mapPath && !mapsBySlug.has(slug),
+  ({ status, slug }) => status === "live" && !mapsBySlug.has(slug),
 );
 
 if (missingMaps.length > 0) {

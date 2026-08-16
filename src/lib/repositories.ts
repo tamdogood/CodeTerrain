@@ -18,8 +18,6 @@ export type Repository = {
   github: string;
   accent: string;
   status: "live" | "planned";
-  mapPath?: string;
-  snapshot?: string;
 };
 
 export const categories = [
@@ -46,8 +44,6 @@ export const repositories: readonly Repository[] = [
     github: "https://github.com/herdrdev/herdr",
     accent: "#b8ff65",
     status: "live",
-    mapPath: "/maps/herdr-system-map.html",
-    snapshot: "master · 51b7064",
   },
   {
     slug: "llama-cpp",
