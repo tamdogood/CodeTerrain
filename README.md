@@ -1,36 +1,32 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# CodeTerrain
 
-## Getting Started
+An interactive learning library with 25 source-cited, isometric maps of
+landmark open-source repositories.
 
-First, run the development server:
+## Run locally
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
+pnpm install
 pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open the local URL printed by Next.js (usually
+[http://localhost:3000](http://localhost:3000), or the next free port).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Add or update a manual map
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1. Add the repository metadata to `src/lib/repositories.ts`.
+2. Add a `SystemMap` entry under `src/data/maps/`, pinning every citation to
+   the analyzed commit.
+3. Export it from `src/data/maps/index.ts` and run `pnpm build`.
 
-## Learn More
+The shared viewer supplies the isometric terrain, journeys, payload animation,
+legend, explainer, glossary, and learner path. Each catalog entry is statically
+generated at `/repo/<slug>` for a durable share link. Herdr remains a legacy
+self-contained HTML map while it is migrated to the shared data format.
 
-To learn more about Next.js, take a look at the following resources:
+## Deploy to Vercel
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Import the repository in Vercel and keep the detected Next.js defaults. Set
+`NEXT_PUBLIC_SITE_URL` to the final production URL if you use a custom domain;
+otherwise Vercel's production host is detected automatically for social cards.
