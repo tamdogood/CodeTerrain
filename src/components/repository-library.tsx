@@ -75,7 +75,7 @@ function RepositoryCard({ repository }: { repository: Repository }) {
           </Link>
         </div>
         <p className="repo-description">{repository.description}</p>
-        <div className="concept-list" aria-label="Key concepts">
+        <div className="concept-list" aria-label="Topics">
           {repository.concepts.map((concept) => (
             <span key={concept}>{concept}</span>
           ))}
@@ -138,12 +138,11 @@ export function RepositoryLibrary() {
     <section className="library-section" id="library" aria-labelledby="library-title">
       <div className="section-heading">
         <div>
-          <p className="eyebrow">The learning library</p>
-          <h2 id="library-title">Choose a codebase to explore</h2>
+          <p className="eyebrow">Map library</p>
+          <h2 id="library-title">Pick a codebase</h2>
         </div>
         <p>
-          Forty-five source-cited atlases, from runtimes and databases to AI
-          systems and developer tools.
+          Explore {repositories.length} source-linked maps and jump straight to the code.
         </p>
       </div>
 
@@ -156,7 +155,7 @@ export function RepositoryLibrary() {
             type="search"
             value={query}
             onChange={(event) => setQuery(event.target.value)}
-            placeholder="Search repo, language, or concept…"
+            placeholder="Search by repo, language, or topic"
           />
           <kbd>⌘ K</kbd>
         </label>
@@ -181,7 +180,7 @@ export function RepositoryLibrary() {
       <div className="results-line" aria-live="polite">
         <span>{filteredRepositories.length} codebases</span>
         <span className="results-rule" />
-        <span>Maps are pinned to a commit for trustworthy citations</span>
+        <span>Each citation links to the mapped commit</span>
       </div>
 
       {filteredRepositories.length > 0 ? (
@@ -194,7 +193,7 @@ export function RepositoryLibrary() {
         <div className="empty-results">
           <Sparkles aria-hidden="true" />
           <h3>No codebases found</h3>
-          <p>Try a language like “Rust” or a concept like “event loop.”</p>
+          <p>Try a language like &quot;Rust&quot; or a topic like &quot;event loop.&quot;</p>
           <Button
             type="button"
             variant="outline"

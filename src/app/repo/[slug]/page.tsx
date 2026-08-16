@@ -32,12 +32,39 @@ export async function generateMetadata({
 }: RepoPageProps): Promise<Metadata> {
   const repository = repositoryBySlug((await params).slug);
 
-  return repository
-    ? {
-        title: repository.name,
-        description: repository.description,
-      }
-    : {};
+  if (!repository) return {};
+
+  const title = `${repository.name} architecture map`;
+  const url = `/repo/${repository.slug}`;
+
+  return {
+    title,
+    description: repository.description,
+    alternates: { canonical: url },
+    openGraph: {
+      title,
+      description: repository.description,
+      type: "website",
+      url,
+      siteName: "CodeTerrain",
+      locale: "en_US",
+      images: [{
+        url: "/og.png",
+        width: 1200,
+        height: 630,
+        alt: "CodeTerrain open-source architecture maps",
+      }],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description: repository.description,
+      images: [{
+        url: "/og.png",
+        alt: "CodeTerrain open-source architecture maps",
+      }],
+    },
+  };
 }
 
 function ViewerHeader({ slug }: { slug: string }) {
@@ -94,7 +121,7 @@ function CuratedMap({ slug }: { slug: string }) {
         </div>
         <p>{map.subtitle}</p>
         <div className="viewer-hint">
-          <MousePointer2 aria-hidden="true" /> Select buildings &amp; routes
+          <MousePointer2 aria-hidden="true" /> Click a building or route
         </div>
       </div>
       <SystemMapViewer key={map.slug} map={map} accent={repository.accent} />
@@ -117,12 +144,11 @@ function PlannedMap({ slug }: { slug: string }) {
           <span className="planned-route" />
         </div>
         <div className="planned-copy">
-          <p className="eyebrow">Publishing roadmap · {repository.category}</p>
-          <h2>{repository.name} is next terrain to chart.</h2>
+          <p className="eyebrow">Map coming soon · {repository.category}</p>
+          <h2>The {repository.name} map is not ready yet.</h2>
           <p>
-            This page is ready to share, but the architecture map is not yet
-            published. It will only go live after the default branch is analyzed
-            and every path is tied to a pinned source citation.
+            We will publish it after we analyze the default branch and link each
+            path to a pinned source file.
           </p>
           <div className="planned-actions">
             <a
@@ -145,8 +171,8 @@ function PlannedMap({ slug }: { slug: string }) {
 
       <section className="learning-plan" aria-labelledby="learning-plan-title">
         <div className="learning-plan-heading">
-          <p className="eyebrow">Your future field guide</p>
-          <h2 id="learning-plan-title">What this map will help you understand</h2>
+          <p className="eyebrow">What the map will cover</p>
+          <h2 id="learning-plan-title">Start with the system, then read the code</h2>
         </div>
         <div className="learning-cards">
           <article>
@@ -154,26 +180,25 @@ function PlannedMap({ slug }: { slug: string }) {
             <p className="learning-label">Orientation</p>
             <h3>System boundaries</h3>
             <p>
-              The major subsystems, what each owns, and why those boundaries
-              exist.
+              The main subsystems, what each one owns, and why they are separate.
             </p>
           </article>
           <article>
             <span className="learning-icon"><Route aria-hidden="true" /></span>
-            <p className="learning-label">Control &amp; data</p>
-            <h3>Real execution paths</h3>
+            <p className="learning-label">Control and data</p>
+            <h3>Request paths</h3>
             <p>
-              How an input becomes work, which payload crosses each boundary,
-              and where state changes.
+              How inputs become work, what crosses each boundary, and when state
+              changes.
             </p>
           </article>
           <article>
             <span className="learning-icon"><GitFork aria-hidden="true" /></span>
-            <p className="learning-label">Source literacy</p>
-            <h3>Files worth reading</h3>
+            <p className="learning-label">Source files</p>
+            <h3>Where to start</h3>
             <p>
-              A guided route into the code, with terminology explained in the
-              context where it matters.
+              Which files to read first, with unfamiliar terms explained as they
+              come up.
             </p>
           </article>
         </div>
@@ -189,11 +214,11 @@ function PlannedMap({ slug }: { slug: string }) {
           <strong>{repository.difficulty}</strong>
         </div>
         <div className="topic-concepts">
-          <span>Learning focus</span>
+          <span>Topics</span>
           <strong>{repository.concepts.join(" · ")}</strong>
         </div>
         <Link href="/#library" className="next-map-link focus-ring">
-          Explore another repo <ArrowRight aria-hidden="true" />
+          Open another repo <ArrowRight aria-hidden="true" />
         </Link>
       </section>
     </main>
