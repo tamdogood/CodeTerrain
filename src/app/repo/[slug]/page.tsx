@@ -74,7 +74,7 @@ function ViewerHeader({ slug }: { slug: string }) {
           <span>View repository</span>
           <ExternalLink aria-hidden="true" />
         </a>
-        {repository.status === "live" && <ViewerControls mapPath={repository.mapPath} />}
+        {repository.status === "live" && <ViewerControls />}
       </div>
     </header>
   );
@@ -98,39 +98,6 @@ function CuratedMap({ slug }: { slug: string }) {
         </div>
       </div>
       <SystemMapViewer key={map.slug} map={map} accent={repository.accent} />
-    </main>
-  );
-}
-
-function LiveMap({ slug }: { slug: string }) {
-  const repository = repositoryBySlug(slug)!;
-
-  return (
-    <main className="viewer-page">
-      <ViewerHeader slug={slug} />
-      <div className="viewer-context">
-        <div>
-          <span className="viewer-context-label">Snapshot</span>
-          <strong>{repository.snapshot}</strong>
-        </div>
-        <p>
-          Select a journey, then click any route or building. Citations open the
-          exact source behind the explanation.
-        </p>
-        <div className="viewer-hint">
-          <MousePointer2 aria-hidden="true" /> Interactive canvas
-        </div>
-      </div>
-      <section className="map-frame-shell" aria-label={`${repository.name} system map`}>
-        <iframe
-          src={repository.mapPath}
-          title={`${repository.name} interactive system map`}
-          className="map-frame"
-          sandbox="allow-scripts allow-popups allow-popups-to-escape-sandbox"
-          referrerPolicy="no-referrer"
-          style={{ colorScheme: "dark" }}
-        />
-      </section>
     </main>
   );
 }
@@ -241,9 +208,5 @@ export default async function RepoPage({ params }: RepoPageProps) {
 
   if (systemMapBySlug(slug)) return <CuratedMap slug={slug} />;
 
-  return repository.mapPath ? (
-    <LiveMap slug={slug} />
-  ) : (
-    <PlannedMap slug={slug} />
-  );
+  return <PlannedMap slug={slug} />;
 }

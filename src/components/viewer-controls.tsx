@@ -5,7 +5,7 @@ import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
 
-export function ViewerControls({ mapPath }: { mapPath?: string }) {
+export function ViewerControls() {
   const [copied, setCopied] = useState(false);
 
   async function copyLink() {
@@ -32,28 +32,15 @@ export function ViewerControls({ mapPath }: { mapPath?: string }) {
         {copied ? <Check aria-hidden="true" /> : <Copy aria-hidden="true" />}
         {copied ? "Copied" : "Copy link"}
       </Button>
-      {mapPath ? (
-        <a
-          href={mapPath}
-          target="_blank"
-          rel="noreferrer"
-          className="viewer-icon-button focus-ring"
-          aria-label="Open map full screen"
-          title="Open map full screen"
-        >
-          <Maximize2 aria-hidden="true" />
-        </a>
-      ) : (
-        <button
-          type="button"
-          className="viewer-icon-button focus-ring"
-          aria-label="Open map full screen"
-          title="Open map full screen"
-          onClick={openFullScreen}
-        >
-          <Maximize2 aria-hidden="true" />
-        </button>
-      )}
+      <button
+        type="button"
+        className="viewer-icon-button focus-ring"
+        aria-label="Open map full screen"
+        title="Open map full screen"
+        onClick={openFullScreen}
+      >
+        <Maximize2 aria-hidden="true" />
+      </button>
     </div>
   );
 }
