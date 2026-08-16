@@ -3,7 +3,6 @@
 import {
   BookOpen,
   Box,
-  ChevronRight,
   CircleHelp,
   ExternalLink,
   FileCode2,
@@ -13,7 +12,15 @@ import {
   Plus,
   Route,
 } from "lucide-react";
-import { useMemo, useRef, useState, type CSSProperties, type KeyboardEvent } from "react";
+import {
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type CSSProperties,
+  type KeyboardEvent,
+  type PointerEvent as ReactPointerEvent,
+} from "react";
 
 import type {
   MapEdge,
@@ -24,6 +31,13 @@ import type {
 
 type Selection = { type: "node" | "edge"; id: string };
 type EdgeKind = MapEdge["kind"];
+
+const MIN_ZOOM = 0.75;
+const MAX_ZOOM = 1.8;
+const DEFAULT_ZOOM = 1.3;
+const ZOOM_STEP = 0.05;
+const clampZoom = (value: number) =>
+  Math.min(MAX_ZOOM, Math.max(MIN_ZOOM, Math.round(value * 100) / 100));
 
 const edgeKinds: readonly { kind: EdgeKind; label: string; help: string }[] = [
   { kind: "control", label: "Control", help: "A command or decision that causes work." },
@@ -217,8 +231,12 @@ export function SystemMapViewer({ map, accent }: { map: SystemMap; accent: strin
   const [visibleEdgeKinds, setVisibleEdgeKinds] = useState<ReadonlySet<EdgeKind>>(
     () => new Set(edgeKinds.map(({ kind }) => kind)),
   );
-  const [zoom, setZoom] = useState(1);
+  const [glossaryTerm, setGlossaryTerm] = useState(map.glossary[0]?.term ?? "");
+  const [zoom, setZoom] = useState(DEFAULT_ZOOM);
   const explainer = useRef<HTMLElement>(null);
+  const scrollArea = useRef<HTMLDivElement>(null);
+  const panStart = useRef<{ pointerId: number; x: number; y: number; left: number; top: number; moved: boolean } | null>(null);
+  const suppressClick = useRef(false);
 
   const nodeById = useMemo(() => new Map(map.nodes.map((node) => [node.id, node])), [map.nodes]);
   const activeJourney = map.journeys.find(({ id }) => id === journeyId);
@@ -235,6 +253,30 @@ export function SystemMapViewer({ map, accent }: { map: SystemMap; accent: strin
   }, [journeyEdgeIds, map.edges]);
   const selectedNode = selection.type === "node" ? nodeById.get(selection.id) : undefined;
   const selectedEdge = selection.type === "edge" ? map.edges.find(({ id }) => id === selection.id) : undefined;
+  const activeGlossaryTerm = map.glossary.find(({ term }) => term === glossaryTerm) ?? map.glossary[0];
+
+  useEffect(() => {
+    const area = scrollArea.current;
+    if (!area) return;
+
+    const handleWheel = (event: WheelEvent) => {
+      if (!event.deltaY) return;
+      event.preventDefault();
+      const sensitivity = event.ctrlKey ? 0.01 : 0.002;
+      setZoom((value) => clampZoom(value - event.deltaY * sensitivity));
+    };
+
+    area.addEventListener("wheel", handleWheel, { passive: false });
+    const frame = window.requestAnimationFrame(() => {
+      area.scrollLeft = (area.scrollWidth - area.clientWidth) / 2;
+      area.scrollTop = (area.scrollHeight - area.clientHeight) / 2;
+    });
+
+    return () => {
+      area.removeEventListener("wheel", handleWheel);
+      window.cancelAnimationFrame(frame);
+    };
+  }, []);
 
   function selectItem(next: Selection) {
     setSelection(next);
@@ -248,6 +290,62 @@ export function SystemMapViewer({ map, accent }: { map: SystemMap; accent: strin
         });
       });
     }
+  }
+
+  function startPan(event: ReactPointerEvent<HTMLDivElement>) {
+    const area = scrollArea.current;
+    if (!area || event.button !== 0 || event.pointerType !== "mouse") return;
+
+    panStart.current = {
+      pointerId: event.pointerId,
+      x: event.clientX,
+      y: event.clientY,
+      left: area.scrollLeft,
+      top: area.scrollTop,
+      moved: false,
+    };
+    area.setPointerCapture(event.pointerId);
+  }
+
+  function movePan(event: ReactPointerEvent<HTMLDivElement>) {
+    const area = scrollArea.current;
+    const start = panStart.current;
+    if (!area || !start || start.pointerId !== event.pointerId) return;
+
+    const x = event.clientX - start.x;
+    const y = event.clientY - start.y;
+    if (!start.moved && Math.hypot(x, y) < 4) return;
+
+    event.preventDefault();
+    start.moved = true;
+    area.classList.add("is-dragging");
+    area.scrollLeft = start.left - x;
+    area.scrollTop = start.top - y;
+  }
+
+  function stopPan(event: ReactPointerEvent<HTMLDivElement>) {
+    const area = scrollArea.current;
+    const start = panStart.current;
+    if (!area || !start || start.pointerId !== event.pointerId) return;
+
+    if (area.hasPointerCapture(event.pointerId)) area.releasePointerCapture(event.pointerId);
+    area.classList.remove("is-dragging");
+    panStart.current = null;
+
+    if (start.moved) {
+      suppressClick.current = true;
+      window.requestAnimationFrame(() => { suppressClick.current = false; });
+    }
+  }
+
+  function resetMap() {
+    setZoom(DEFAULT_ZOOM);
+    window.requestAnimationFrame(() => {
+      const area = scrollArea.current;
+      if (!area) return;
+      area.scrollLeft = (area.scrollWidth - area.clientWidth) / 2;
+      area.scrollTop = (area.scrollHeight - area.clientHeight) / 2;
+    });
   }
 
   function toggleEdgeKind(kind: EdgeKind) {
@@ -279,7 +377,7 @@ export function SystemMapViewer({ map, accent }: { map: SystemMap; accent: strin
       <div className="map-journey-bar">
         <div className="map-journey-intro">
           <Route aria-hidden="true" />
-          <span>Follow a real path</span>
+          <span>Choose a path</span>
         </div>
         <div className="map-journey-list" role="group" aria-label="System journeys">
           {map.journeys.map((journey, index) => (
@@ -301,33 +399,45 @@ export function SystemMapViewer({ map, accent }: { map: SystemMap; accent: strin
         <div className="map-workspace">
           <div className="map-canvas-header">
             <div>
-              <span>System terrain</span>
+              <span>System map</span>
               <strong>{map.nodes.length} components · {map.edges.length} connections</strong>
             </div>
             <div className="map-zoom-controls" aria-label="Map zoom controls">
-              <button type="button" onClick={() => setZoom((value) => Math.max(1, value - 0.2))} disabled={zoom <= 1} aria-label="Zoom out">
+              <button type="button" onClick={() => setZoom((value) => clampZoom(value - ZOOM_STEP))} disabled={zoom <= MIN_ZOOM} aria-label="Zoom out">
                 <Minus aria-hidden="true" />
               </button>
               <span>{Math.round(zoom * 100)}%</span>
-              <button type="button" onClick={() => setZoom((value) => Math.min(1.8, value + 0.2))} disabled={zoom >= 1.8} aria-label="Zoom in">
+              <button type="button" onClick={() => setZoom((value) => clampZoom(value + ZOOM_STEP))} disabled={zoom >= MAX_ZOOM} aria-label="Zoom in">
                 <Plus aria-hidden="true" />
               </button>
-              <button type="button" onClick={() => setZoom(1)} aria-label="Fit map to view" title="Fit to view">
+              <button type="button" onClick={resetMap} aria-label="Reset map view" title="Reset map view">
                 <Focus aria-hidden="true" />
               </button>
             </div>
           </div>
 
-          <div className="map-scroll-area">
+          <div
+            ref={scrollArea}
+            className="map-scroll-area"
+            onPointerDown={startPan}
+            onPointerMove={movePan}
+            onPointerUp={stopPan}
+            onPointerCancel={stopPan}
+            onClickCapture={(event) => {
+              if (!suppressClick.current) return;
+              event.preventDefault();
+              event.stopPropagation();
+              suppressClick.current = false;
+            }}
+          >
+            {/* ponytail: fits today's 9–91 / 14–80 map coordinates; derive bounds if maps expand beyond them. */}
             <svg
               className="system-map-canvas"
               style={{
                 width: `${zoom * 100}%`,
                 height: `${zoom * 100}%`,
-                minWidth: `${900 * zoom}px`,
-                minHeight: `${585 * zoom}px`,
               }}
-              viewBox="0 0 1000 650"
+              viewBox="55 0 880 575"
               role="group"
               aria-labelledby={`${map.slug}-map-title ${map.slug}-map-description`}
             >
@@ -442,11 +552,11 @@ export function SystemMapViewer({ map, accent }: { map: SystemMap; accent: strin
                   <p className="map-explainer-summary">{selectedNode.summary}</p>
                 </div>
                 <section className="map-explainer-section">
-                  <h3><Layers3 aria-hidden="true" /> What it owns</h3>
+                  <h3><Layers3 aria-hidden="true" /> Responsibility</h3>
                   <p>{selectedNode.responsibility}</p>
                 </section>
                 <section className="map-explainer-section">
-                  <h3><FileCode2 aria-hidden="true" /> Read the evidence</h3>
+                  <h3><FileCode2 aria-hidden="true" /> Source files</h3>
                   <CitationList citations={selectedNode.citations} />
                 </section>
               </>
@@ -465,37 +575,50 @@ export function SystemMapViewer({ map, accent }: { map: SystemMap; accent: strin
                   <p className="map-explainer-summary">{selectedEdge.description}</p>
                 </div>
                 <section className="map-explainer-section">
-                  <h3><FileCode2 aria-hidden="true" /> Read the evidence</h3>
+                  <h3><FileCode2 aria-hidden="true" /> Source files</h3>
                   <CitationList citations={selectedEdge.citations} />
                 </section>
               </>
             )}
 
-            <section className="map-explainer-section map-glossary">
-              <h3><CircleHelp aria-hidden="true" /> Terms, in plain English</h3>
-              <div>
-                {map.glossary.map(({ term, definition }, index) => (
-                  <details key={term} open={index === 0}>
-                    <summary>{term}<ChevronRight aria-hidden="true" /></summary>
-                    <p>{definition}</p>
-                  </details>
-                ))}
-              </div>
-            </section>
-
-            <section className="map-explainer-section map-learning-path">
-              <h3><BookOpen aria-hidden="true" /> How to study this repo</h3>
-              <ol>
-                {map.learningPath.map((step, index) => (
-                  <li key={step.title}>
-                    <span>{index + 1}</span>
-                    <div><strong>{step.title}</strong><p>{step.description}</p></div>
-                  </li>
-                ))}
-              </ol>
-            </section>
           </div>
         </aside>
+
+        <div className="map-learning-dock">
+          <section className="map-glossary">
+            <h3><CircleHelp aria-hidden="true" /> Terms, in plain English</h3>
+            <div className="map-glossary-list" aria-label="Glossary terms">
+              {map.glossary.map(({ term }) => (
+                <button
+                  key={term}
+                  type="button"
+                  aria-pressed={term === activeGlossaryTerm?.term}
+                  onClick={() => setGlossaryTerm(term)}
+                >
+                  {term}
+                </button>
+              ))}
+            </div>
+            {activeGlossaryTerm && (
+              <p className="map-glossary-definition" aria-live="polite">
+                <strong>{activeGlossaryTerm.term}</strong>
+                {activeGlossaryTerm.definition}
+              </p>
+            )}
+          </section>
+
+          <section className="map-learning-path">
+            <h3><BookOpen aria-hidden="true" /> How to study this repo</h3>
+            <ol>
+              {map.learningPath.map((step, index) => (
+                <li key={step.title}>
+                  <span>{index + 1}</span>
+                  <div><strong>{step.title}</strong><p>{step.description}</p></div>
+                </li>
+              ))}
+            </ol>
+          </section>
+        </div>
       </div>
     </section>
   );

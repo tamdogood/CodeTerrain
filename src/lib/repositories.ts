@@ -38,7 +38,7 @@ export const repositories: readonly Repository[] = [
     name: "Herdr",
     owner: "herdrdev",
     description:
-      "A terminal workspace runtime mapped from client requests through PTYs, detection, persistence, and remote transport.",
+      "Herdr handles client requests, terminal sessions, saved state, and remote connections.",
     category: "Developer tools",
     language: "Rust",
     difficulty: "Intermediate",
@@ -54,7 +54,7 @@ export const repositories: readonly Repository[] = [
     name: "llama.cpp",
     owner: "ggml-org",
     description:
-      "Trace a prompt through tokenization, model loading, graph execution, sampling, and hardware backends.",
+      "llama.cpp loads a model, tokenizes a prompt, runs its compute graph, and samples the next token.",
     category: "AI",
     language: "C / C++",
     difficulty: "Advanced",
@@ -68,7 +68,7 @@ export const repositories: readonly Repository[] = [
     name: "Beads",
     owner: "gastownhall",
     description:
-      "Follow agent work from CLI commands through issue graphs, local state, synchronization, and automation hooks.",
+      "Beads turns CLI commands into issue graphs, syncs local state, and runs automation hooks.",
     category: "Developer tools",
     language: "Go",
     difficulty: "Intermediate",
@@ -82,7 +82,7 @@ export const repositories: readonly Repository[] = [
     name: "Unsloth",
     owner: "unslothai",
     description:
-      "See how model loading, optimized kernels, adapters, training, and export make fine-tuning faster and leaner.",
+      "Unsloth uses optimized kernels and adapters to load, train, and export fine-tuned models.",
     category: "AI",
     language: "Python",
     difficulty: "Advanced",
@@ -96,7 +96,7 @@ export const repositories: readonly Repository[] = [
     name: "CLI-Anything",
     owner: "HKUDS",
     description:
-      "Explore how an agent studies software, designs a command surface, implements a harness, and verifies the result.",
+      "CLI-Anything studies an app, designs its commands, builds a harness, and tests the result.",
     category: "Developer tools",
     language: "Python",
     difficulty: "Approachable",
@@ -110,7 +110,7 @@ export const repositories: readonly Repository[] = [
     name: "React",
     owner: "facebook",
     description:
-      "Learn how components become updates through reconciliation, scheduling, and platform renderers.",
+      "React schedules component updates, reconciles the tree, and sends changes to a renderer.",
     category: "Web",
     language: "JavaScript",
     difficulty: "Advanced",
@@ -124,7 +124,7 @@ export const repositories: readonly Repository[] = [
     name: "Next.js",
     owner: "vercel",
     description:
-      "Trace a request through routing, rendering, caching, bundling, and the React server boundary.",
+      "Next.js routes requests, renders React on the server, caches results, and bundles the app.",
     category: "Web",
     language: "TypeScript",
     difficulty: "Advanced",
@@ -138,7 +138,7 @@ export const repositories: readonly Repository[] = [
     name: "VS Code",
     owner: "microsoft",
     description:
-      "Explore the workbench, extension host, editor core, language services, and process boundaries.",
+      "The VS Code workbench, editor, language services, and extension host communicate across processes.",
     category: "Developer tools",
     language: "TypeScript",
     difficulty: "Advanced",
@@ -152,7 +152,7 @@ export const repositories: readonly Repository[] = [
     name: "Kubernetes",
     owner: "kubernetes",
     description:
-      "See desired state move through the API server, storage, schedulers, controllers, and kubelets.",
+      "Kubernetes turns desired state into work across its API server, controllers, scheduler, and kubelets.",
     category: "Infrastructure",
     language: "Go",
     difficulty: "Advanced",
@@ -166,7 +166,7 @@ export const repositories: readonly Repository[] = [
     name: "Linux",
     owner: "torvalds",
     description:
-      "Follow work from system calls into scheduling, memory, filesystems, networking, and drivers.",
+      "Linux handles a system call across the scheduler, memory, filesystems, network stack, and drivers.",
     category: "Systems",
     language: "C",
     difficulty: "Advanced",
@@ -180,7 +180,7 @@ export const repositories: readonly Repository[] = [
     name: "PostgreSQL",
     owner: "postgres",
     description:
-      "Trace SQL through parsing, planning, execution, MVCC, write-ahead logging, and storage.",
+      "PostgreSQL parses and plans SQL, executes it under MVCC, and records changes in storage and WAL.",
     category: "Data",
     language: "C",
     difficulty: "Advanced",
@@ -194,7 +194,7 @@ export const repositories: readonly Repository[] = [
     name: "Redis",
     owner: "redis",
     description:
-      "Study a compact server built around an event loop, data structures, persistence, and replication.",
+      "Redis uses one event loop to serve its data structures, persist changes, and replicate them.",
     category: "Data",
     language: "C",
     difficulty: "Intermediate",
@@ -208,7 +208,7 @@ export const repositories: readonly Repository[] = [
     name: "Moby",
     owner: "moby",
     description:
-      "Understand container lifecycle, image layers, networking, storage drivers, and runtime boundaries.",
+      "Moby creates containers from image layers and connects them to storage, networks, and a runtime.",
     category: "Infrastructure",
     language: "Go",
     difficulty: "Advanced",
@@ -222,7 +222,7 @@ export const repositories: readonly Repository[] = [
     name: "Git",
     owner: "git",
     description:
-      "See how commits, trees, blobs, refs, indexes, packfiles, and transport fit together.",
+      "Git builds commits from its index and object graph, then stores and transfers them as packfiles.",
     category: "Developer tools",
     language: "C",
     difficulty: "Intermediate",
@@ -236,7 +236,7 @@ export const repositories: readonly Repository[] = [
     name: "Rust",
     owner: "rust-lang",
     description:
-      "Walk source code through parsing, type checking, borrow checking, MIR, and code generation.",
+      "The Rust compiler parses code, checks its types and borrows, lowers it to MIR, and generates a binary.",
     category: "Systems",
     language: "Rust",
     difficulty: "Advanced",
@@ -250,7 +250,7 @@ export const repositories: readonly Repository[] = [
     name: "Go",
     owner: "golang",
     description:
-      "Explore the compiler, runtime scheduler, garbage collector, standard library, and toolchain.",
+      "Go's compiler and toolchain produce code that runs on its scheduler, garbage collector, and standard library.",
     category: "Systems",
     language: "Go",
     difficulty: "Advanced",
@@ -264,7 +264,7 @@ export const repositories: readonly Repository[] = [
     name: "CPython",
     owner: "python",
     description:
-      "Follow Python source through parsing, bytecode compilation, evaluation, objects, and memory.",
+      "CPython turns source into bytecode, evaluates it, and manages Python objects in memory.",
     category: "Systems",
     language: "C / Python",
     difficulty: "Advanced",
@@ -278,7 +278,7 @@ export const repositories: readonly Repository[] = [
     name: "Node.js",
     owner: "nodejs",
     description:
-      "Connect JavaScript execution to native bindings, the event loop, workers, streams, and networking.",
+      "Node.js connects JavaScript to native code, the event loop, workers, streams, and the network.",
     category: "Systems",
     language: "C++ / JavaScript",
     difficulty: "Advanced",
@@ -292,7 +292,7 @@ export const repositories: readonly Repository[] = [
     name: "Deno",
     owner: "denoland",
     description:
-      "Study a modern runtime across TypeScript tooling, permissions, web APIs, V8, and Rust ops.",
+      "Deno connects TypeScript tooling and web APIs to V8, Rust ops, and its permission checks.",
     category: "Systems",
     language: "Rust / TypeScript",
     difficulty: "Advanced",
@@ -306,7 +306,7 @@ export const repositories: readonly Repository[] = [
     name: "Supabase",
     owner: "supabase",
     description:
-      "Map an open-source backend platform across Postgres, auth, realtime, storage, APIs, and tooling.",
+      "Supabase builds auth, realtime updates, storage, and APIs around PostgreSQL.",
     category: "Data",
     language: "TypeScript",
     difficulty: "Intermediate",
@@ -320,7 +320,7 @@ export const repositories: readonly Repository[] = [
     name: "Grafana",
     owner: "grafana",
     description:
-      "Follow observability data from plugins and queries into transformations, dashboards, and alerts.",
+      "Grafana queries data through plugins, transforms the results, and feeds dashboards and alerts.",
     category: "Data",
     language: "Go / TypeScript",
     difficulty: "Advanced",
@@ -334,7 +334,7 @@ export const repositories: readonly Repository[] = [
     name: "Terraform",
     owner: "hashicorp",
     description:
-      "Learn how configuration becomes a dependency graph, plan, provider calls, and durable state.",
+      "Terraform turns configuration into a dependency graph, a plan, provider calls, and saved state.",
     category: "Infrastructure",
     language: "Go",
     difficulty: "Advanced",
@@ -348,7 +348,7 @@ export const repositories: readonly Repository[] = [
     name: "Home Assistant",
     owner: "home-assistant",
     description:
-      "Explore integrations, entity state, the event bus, automations, services, and device I/O.",
+      "Home Assistant links integrations and device I/O to entity state, events, services, and automations.",
     category: "Infrastructure",
     language: "Python",
     difficulty: "Intermediate",
@@ -362,7 +362,7 @@ export const repositories: readonly Repository[] = [
     name: "PyTorch",
     owner: "pytorch",
     description:
-      "Trace tensors through dispatch, autograd, operators, compilation, devices, and distributed execution.",
+      "PyTorch dispatches tensor operations, records autograd, compiles graphs, and runs across devices.",
     category: "AI",
     language: "Python / C++",
     difficulty: "Advanced",
@@ -376,7 +376,7 @@ export const repositories: readonly Repository[] = [
     name: "TensorFlow",
     owner: "tensorflow",
     description:
-      "Map graphs and tensors across eager execution, kernels, devices, optimization, and serving.",
+      "TensorFlow runs tensors eagerly or as graphs, selects kernels and devices, then optimizes and serves models.",
     category: "AI",
     language: "C++ / Python",
     difficulty: "Advanced",
