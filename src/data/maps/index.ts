@@ -4,14 +4,15 @@ import { repositories } from "@/lib/repositories";
 import { batchA } from "./batch-a";
 import { batchB } from "./batch-b";
 import { batchC } from "./batch-c";
+import { herdrMap } from "./herdr";
 
-export const systemMaps = [...batchA, ...batchB, ...batchC];
+export const systemMaps = [herdrMap, ...batchA, ...batchB, ...batchC];
 
 assertSystemMaps(systemMaps);
 
 const mapsBySlug = new Map(systemMaps.map((map) => [map.slug, map]));
 const missingMaps = repositories.filter(
-  ({ status, mapPath, slug }) => status === "live" && !mapPath && !mapsBySlug.has(slug),
+  ({ status, slug }) => status === "live" && !mapsBySlug.has(slug),
 );
 
 if (missingMaps.length > 0) {
