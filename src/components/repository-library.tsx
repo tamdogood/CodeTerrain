@@ -50,11 +50,7 @@ function RepositoryCard({ repository }: { repository: Repository }) {
       className="repo-card group"
       style={{ "--repo-accent": repository.accent } as CSSProperties}
     >
-      <Link
-        href={`/repo/${repository.slug}`}
-        className="repo-visual focus-ring"
-        aria-label={`${isLive ? "Open" : "Preview"} ${repository.name}`}
-      >
+      <div className="repo-visual">
         <div className="repo-card-topline">
           <Badge className={isLive ? "status-live" : "status-planned"}>
             <span className="status-dot" />
@@ -69,7 +65,7 @@ function RepositoryCard({ repository }: { repository: Repository }) {
           </span>
         </div>
         <MiniCity accent={repository.accent} />
-      </Link>
+      </div>
 
       <div className="repo-card-body">
         <div className="repo-title-row">
