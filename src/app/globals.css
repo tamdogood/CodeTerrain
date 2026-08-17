@@ -1000,6 +1000,13 @@ a {
   width: 13px;
 }
 
+.card-arrow::before {
+  position: absolute;
+  z-index: 7;
+  inset: 0;
+  content: "";
+}
+
 .repo-card:hover .card-arrow {
   transform: rotate(-30deg);
   border-color: color-mix(in srgb, var(--repo-accent) 40%, transparent);
@@ -1048,6 +1055,8 @@ a {
 }
 
 .github-link {
+  position: relative;
+  z-index: 8;
   display: inline-flex;
   align-items: center;
   gap: 5px;
